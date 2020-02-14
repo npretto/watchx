@@ -1,0 +1,18 @@
+{
+  "name": "watchx-cli",
+  "version": "0.1.0",
+  "description": "watch your haxe projects and build with little to none configuration needed",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "npretto",
+  "license": "MIT",
+  "bin": {
+    "watchx": "index.js"
+  },
+  "dependencies": {
+    "chokidar": "^3.3.1",
+    "fast-xml-parser": "^3.16.0"
+  }
+}
