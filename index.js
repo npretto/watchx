@@ -87,7 +87,6 @@ function run(fileName) {
   const build = () => {
     console.log(`starting new  compilation`);
     child = spawn(command, compileArgs);
-    console.log("child: ", !!child);
 
     child && child.stdout.pipe(process.stdout);
     child && child.stderr.pipe(process.stderr);

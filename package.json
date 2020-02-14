@@ -8,6 +8,10 @@
   },
   "author": "npretto",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/npretto/watchx.git"
+  },
   "bin": {
     "watchx": "index.js"
   },
