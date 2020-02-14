@@ -1,6 +1,6 @@
 {
   "name": "watchx-cli",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "watch your haxe projects and build with little to none configuration needed",
   "main": "index.js",
   "scripts": {
@@ -12,6 +12,7 @@
     "type": "git",
     "url": "https://github.com/npretto/watchx.git"
   },
+  "homepage": "https://github.com/npretto/watchx",
   "bin": {
     "watchx": "index.js"
   },
