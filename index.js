@@ -68,6 +68,14 @@ function run(fileName) {
   let child = undefined;
   let changedWhileBuilding = false;
 
+  if (config.type == "openfl" && args.includes("html5")) {
+    console.log("starting livereload on port 8080");
+    const LiveReloadAndServe = require("./livereloadandserve");
+
+    const liveReloadServer = new LiveReloadAndServe("Export/html5/bin");
+    liveReloadServer.listen();
+  }
+
   chokidar
     .watch(config.sources, { ignoreInitial: true })
     .on("all", (event, path) => {

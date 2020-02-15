@@ -1,6 +1,6 @@
 {
   "name": "watchx-cli",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "watch your haxe projects and build with little to none configuration needed",
   "main": "index.js",
   "scripts": {
@@ -19,6 +19,7 @@
   "dependencies": {
     "chalk": "^3.0.0",
     "chokidar": "^3.3.1",
-    "fast-xml-parser": "^3.16.0"
+    "fast-xml-parser": "^3.16.0",
+    "livereload": "^0.9.1"
   }
 }
