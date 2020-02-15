@@ -3,15 +3,16 @@ const fs = require("fs");
 const parser = require("fast-xml-parser");
 const chokidar = require("chokidar");
 const { spawn } = require("child_process");
+const chalk = require("chalk");
+
+const ok = chalk.greenBright;
+const error = chalk.redBright;
+const warning = chalk.yellow;
+const info = chalk.gray;
 
 const readDir = fs.readdirSync;
 
 let [nodePath, watchxPath, ...args] = process.argv;
-
-// console.log("hello from watchx");
-// console.log("node path: ", nodePath);
-// console.log("cmd path: ", watchxPath);
-// console.log("args:", args);
 
 if (
   args.length === 1 &&
@@ -27,32 +28,32 @@ if (
 
   if (hxmls.length === 1) {
     const [hxml] = hxmls;
-    console.log(`${hxml} file detected, will use it as config`);
+    console.log(ok(`${hxml} file detected, will use it as config`));
     run(hxml);
   } else if (openflFiles.length == 1) {
     const [openflFile] = openflFiles;
-    console.log(`${openflFile} file detected, will use it as config`);
+    console.log(ok(`${openflFile} file detected, will use it as config`));
     if (args.length === 0) {
-      console.log("openfl needs a target");
+      console.log(warning("openfl needs a target"));
       process.exit(1);
     }
     run(openflFile);
   } else {
-    console.log("No project file selected");
+    console.log(error("No project file selected"));
     console.log("This can happen if there are more than 1 in this folder");
     console.log("You can pass one as the first argument");
   }
 }
 
 function run(fileName) {
-  console.log(`watchx will use ${fileName}`);
+  console.log(info(`watchx will use ${fileName}`));
   let config = {};
   if (fileName.endsWith(".hxml")) {
     config = parseHxml(fileName);
   } else if (fileName.endsWith(".xml")) {
     config = parseOpenflProjectFile(fileName);
   }
-  console.log("config", config);
+  console.log(info("config"), config);
 
   let command = "";
   let compilerArgs = [];
@@ -70,37 +71,42 @@ function run(fileName) {
   chokidar
     .watch(config.sources, { ignoreInitial: true })
     .on("all", (event, path) => {
-      console.log(event, path);
+      console.log(info(event, path));
 
       if (child) {
-        // console.log(`killing process`);
-        // child;
-        // child.kill("SIGTERM");
-        // console.log(`process killed`);
-        console.log("file changed while building, will rebuild at the end");
+        console.log(
+          info("file changed while building, will rebuild at the end")
+        );
         changedWhileBuilding = true;
       } else {
+        console.log("");
+        console.log(`starting new build`);
+        console.log("");
         build();
       }
     });
 
   const build = () => {
-    console.log(`starting new  compilation`);
     child = spawn(command, compileArgs);
 
     child && child.stdout.pipe(process.stdout);
     child && child.stderr.pipe(process.stderr);
 
     child.on("close", code => {
-      console.log(`child process exited with code ${code}`);
+      if (code === 0) {
+        console.log(ok("build has finished successfully"));
+        //   postBuild();
+      } else {
+        console.log("");
+        console.log(error(`build failed with error code: ${code}`));
+      }
       child = undefined;
       if (changedWhileBuilding) {
-        console.log("rebuilding because it was changed while building");
+        console.log("");
+        console.log("rebuilding because a file was changed during last build");
+        console.log("");
         changedWhileBuilding = false;
         build();
-      }
-      if (code === 0) {
-        //   postBuild();
       }
     });
   };
